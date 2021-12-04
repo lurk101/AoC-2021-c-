@@ -16,7 +16,6 @@ void load(void) {
     while (file >> s)
         codes.push_back(strtoul(s.c_str(), NULL, 2));
     bits = s.length();
-    file.close();
 }
 
 int part1(void) {
