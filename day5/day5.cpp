@@ -84,4 +84,3 @@ int main() {
     cout << "Part 1 - " << part(true) << endl;
     cout << "Part 2 - " << part(false) << endl;
 }
-
