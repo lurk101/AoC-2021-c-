@@ -3,9 +3,9 @@
 #include <iostream>
 using namespace std;
 
-uint64_t fish[9] = {0};
-
 unsigned inline mod9(unsigned n) { return n >= 9 ? n - 9 : n; }
+
+uint64_t fish[9] = {0};
 
 uint64_t part(unsigned days) {
     static unsigned day0_ix = 0;
