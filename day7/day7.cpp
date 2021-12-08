@@ -1,30 +1,31 @@
 // day7.cpp
+#include <bits/stdc++.h>
 #include <fstream>
 #include <iostream>
 #include <list>
 using namespace std;
 
-list<unsigned> x;
+list<int> crabs;
 
-unsigned fuel_cost(unsigned n, bool part1) {
-    if (part1 || (n < 2))
+int inline fuel_cost(int n, int part) {
+    if ((part == 1) || (n < 2))
         return n;
-    return (n * (1 + n)) / 2;
+    return n * (n + 1) / 2;
 }
 
-unsigned part(bool part1) {
-    unsigned min = 999999, max = 0;
-    for (auto n : x) {
-        if (n > max)
-            max = n;
-        if (n < min)
-            min = n;
+int solve(int part) {
+    int min_x = INT_MAX, max_x = INT_MIN;
+    for (auto cx : crabs) {
+        if (cx > max_x)
+            max_x = cx;
+        if (cx < min_x)
+            min_x = cx;
     }
-    unsigned min_fuel = 4294967295;
-    for (unsigned n = min; n <= max; n++) {
-        unsigned fuel = 0;
-        for (auto& xn : x)
-            fuel += fuel_cost(xn > n ? xn - n : n - xn, part1);
+    int min_fuel = INT_MAX;
+    for (int x = min_x; x <= max_x; x++) {
+        int fuel = 0;
+        for (auto cx : crabs)
+            fuel += fuel_cost(abs(cx - x), part);
         if (fuel < min_fuel)
             min_fuel = fuel;
     }
@@ -34,11 +35,11 @@ unsigned part(bool part1) {
 int main() {
     ifstream file("day7.txt");
     char c;
-    unsigned n;
+    int n;
     while (file >> n) {
-        x.push_back(n);
+        crabs.push_back(n);
         file >> c;
     }
-    cout << "Part 1 - " << part(true) << endl;
-    cout << "Part 2 - " << part(false) << endl;
+    cout << "Part 1 - " << solve(1) << endl;
+    cout << "Part 2 - " << solve(2) << endl;
 }
