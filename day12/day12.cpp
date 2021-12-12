@@ -26,6 +26,8 @@ void connect(string from, string to) {
 }
 
 void load(void) {
+    for (auto c : caves)
+        delete &c.second->to;
     caves.clear();
     ifstream file("day12.txt");
     string from, to;
