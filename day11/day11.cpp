@@ -1,9 +1,11 @@
 // day11.cpp
 #include <bitset>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <list>
 using namespace std;
+using namespace std::chrono;
 
 uint8_t dumbo[100];
 bitset<100> flashed;
@@ -69,8 +71,11 @@ unsigned part2(void) {
 }
 
 int main() {
+    auto start = high_resolution_clock::now();
     generate_adjacents();
     cout << "Part 1 - " << part1() << endl;
     cout << "Part 2 - " << part2() << endl;
-    return 0;
+    cout << "Elapsed - "
+         << duration_cast<microseconds>(high_resolution_clock::now() - start).count() / 1000.0
+         << " ms." << endl;
 }
