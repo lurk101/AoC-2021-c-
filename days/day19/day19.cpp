@@ -1,5 +1,4 @@
 #define title "--- Day 19: Beacon Scanner ---"
-#include <array>
 #include <chrono>
 #include <deque>
 #include <functional>
@@ -11,29 +10,31 @@
 using namespace std;
 using namespace chrono;
 
-typedef array<pair<int, int>, 3> rotation_t;
+typedef struct {
+    int8_t dim, sign;
+} rotation_t[3];
+
 const int X = 0, Y = 1, Z = 2, POS = 1, NEG = -1;
+
 const rotation_t rotations[24] = {
-    {{{X, POS}, {Y, POS}, {Z, POS}}}, {{{X, POS}, {Z, POS}, {Y, NEG}}},
-    {{{X, POS}, {Y, NEG}, {Z, NEG}}}, {{{X, POS}, {Z, NEG}, {Y, POS}}},
-    {{{X, NEG}, {Y, POS}, {Z, NEG}}}, {{{X, NEG}, {Z, NEG}, {Y, NEG}}},
-    {{{X, NEG}, {Y, NEG}, {Z, POS}}}, {{{X, NEG}, {Z, POS}, {Y, POS}}},
-    {{{Y, POS}, {X, POS}, {Z, NEG}}}, {{{Y, POS}, {Z, NEG}, {X, NEG}}},
-    {{{Y, POS}, {X, NEG}, {Z, POS}}}, {{{Y, POS}, {Z, POS}, {X, POS}}},
-    {{{Y, NEG}, {X, POS}, {Z, POS}}}, {{{Y, NEG}, {Z, POS}, {X, NEG}}},
-    {{{Y, NEG}, {X, NEG}, {Z, NEG}}}, {{{Y, NEG}, {Z, NEG}, {X, POS}}},
-    {{{Z, POS}, {X, POS}, {Y, POS}}}, {{{Z, POS}, {Y, POS}, {X, NEG}}},
-    {{{Z, POS}, {X, NEG}, {Y, NEG}}}, {{{Z, POS}, {Y, NEG}, {X, POS}}},
-    {{{Z, NEG}, {X, POS}, {Y, NEG}}}, {{{Z, NEG}, {Y, NEG}, {X, NEG}}},
-    {{{Z, NEG}, {X, NEG}, {Y, POS}}}, {{{Z, NEG}, {Y, POS}, {X, POS}}}};
+    {{X, POS}, {Y, POS}, {Z, POS}}, {{X, POS}, {Z, POS}, {Y, NEG}}, {{X, POS}, {Y, NEG}, {Z, NEG}},
+    {{X, POS}, {Z, NEG}, {Y, POS}}, {{X, NEG}, {Y, POS}, {Z, NEG}}, {{X, NEG}, {Z, NEG}, {Y, NEG}},
+    {{X, NEG}, {Y, NEG}, {Z, POS}}, {{X, NEG}, {Z, POS}, {Y, POS}}, {{Y, POS}, {X, POS}, {Z, NEG}},
+    {{Y, POS}, {Z, NEG}, {X, NEG}}, {{Y, POS}, {X, NEG}, {Z, POS}}, {{Y, POS}, {Z, POS}, {X, POS}},
+    {{Y, NEG}, {X, POS}, {Z, POS}}, {{Y, NEG}, {Z, POS}, {X, NEG}}, {{Y, NEG}, {X, NEG}, {Z, NEG}},
+    {{Y, NEG}, {Z, NEG}, {X, POS}}, {{Z, POS}, {X, POS}, {Y, POS}}, {{Z, POS}, {Y, POS}, {X, NEG}},
+    {{Z, POS}, {X, NEG}, {Y, NEG}}, {{Z, POS}, {Y, NEG}, {X, POS}}, {{Z, NEG}, {X, POS}, {Y, NEG}},
+    {{Z, NEG}, {Y, NEG}, {X, NEG}}, {{Z, NEG}, {X, NEG}, {Y, POS}}, {{Z, NEG}, {Y, POS}, {X, POS}}};
+
+const unsigned common_beacons = 12;
 
 struct point_s {
-    int64_t x, y, z;
-    int64_t manhattan() { return abs(x) + abs(y) + abs(z); }
+    int x, y, z;
+    int manhattan() { return abs(x) + abs(y) + abs(z); }
     point_s rotate(const rotation_t& rot) const {
-        const int64_t* vals[3] = {&x, &y, &z};
-        return {(*vals[rot[0].first]) * rot[0].second, (*vals[rot[1].first]) * rot[1].second,
-                (*vals[rot[2].first]) * rot[2].second};
+        const int* vals[3] = {&x, &y, &z};
+        return {(*vals[rot[0].dim]) * rot[0].sign, (*vals[rot[1].dim]) * rot[1].sign,
+                (*vals[rot[2].dim]) * rot[2].sign};
     }
     bool parse(string& s) {
         if (s.length() == 0)
@@ -59,7 +60,7 @@ bool operator==(const point_s& lhs, const point_s& rhs) {
 
 struct hasher {
     size_t operator()(point_s const& s) const {
-        return hash<int64_t>{}(s.x) ^ (hash<int64_t>{}(s.y) << 1) ^ (hash<int64_t>{}(s.z) << 2);
+        return hash<int>{}(s.x) ^ (hash<int>{}(s.y) << 1) ^ (hash<int>{}(s.z) << 2);
     }
 };
 
@@ -71,7 +72,6 @@ struct scanner_orientation {
 };
 
 struct scanner_s {
-    int64_t scanner_id;
     vector<beacon_t> beacons;
     point_s position;
     void normalize(const scanner_orientation& orientation) {
@@ -79,15 +79,18 @@ struct scanner_s {
             beacon = beacon.rotate(orientation.rotation) + orientation.position;
         position = orientation.position;
     }
-    bool overlaps(const scanner_s& other, uint64_t threshold, scanner_orientation& o) const {
+    bool overlaps(const scanner_s& other, uint threshold, scanner_orientation& o) const {
         for (auto& rotation : rotations) {
-            unordered_map<beacon_t, uint32_t, hasher> cnts;
+            unordered_map<beacon_t, unsigned, hasher> cnts;
             for (auto& lhs : beacons)
                 for (auto& rhs : other.beacons)
                     cnts[lhs - rhs.rotate(rotation)]++;
             for (auto& el : cnts)
                 if (el.second >= threshold) {
-                    o = scanner_orientation{rotation, el.first};
+                    o.position = el.first;
+                    o.rotation[0] = rotation[0];
+                    o.rotation[1] = rotation[1];
+                    o.rotation[2] = rotation[2];
                     return true;
                 }
         }
@@ -95,19 +98,19 @@ struct scanner_s {
     }
 };
 
-void normalize(vector<scanner_s>& scanners, uint64_t threshold);
+void normalize(vector<scanner_s>& scanners, uint threshold);
 
-void normalize(vector<scanner_s>& scanners, uint64_t threshold) {
-    unordered_set<int64_t> fixed;
-    deque<int64_t> queue;
+void normalize(vector<scanner_s>& scanners, uint threshold) {
+    unordered_set<int> fixed;
+    deque<int> queue;
     fixed.insert(0);
     queue.push_back(0);
     scanners[0].position = point_s{0, 0, 0};
     while (!queue.empty()) {
         auto tested = queue.front();
         queue.pop_front();
-        for (size_t other = 0; other < scanners.size(); other++) {
-            if (fixed.find(uint64_t(other)) != fixed.end())
+        for (unsigned other = 0; other < scanners.size(); other++) {
+            if (fixed.find(uint(other)) != fixed.end())
                 continue;
             scanner_orientation rot;
             if (!scanners[tested].overlaps(scanners[other], threshold, rot))
@@ -137,22 +140,20 @@ int main() {
             scan.beacons.clear();
             continue;
         }
-        if (line[1] == '-') {
-            scan.scanner_id = stoll(line.substr(12));
+        if (line[1] == '-')
             continue;
-        }
         beacon_t b;
         if (b.parse(line))
             scan.beacons.push_back(b);
     }
     scanners.push_back(scan);
-    normalize(scanners, 12);
+    normalize(scanners, common_beacons);
     unordered_set<beacon_t, hasher> unique_beacons;
     for (const auto& s : scanners)
         for (const auto& b : s.beacons)
             unique_beacons.insert(b);
     cout << "Part 1  - " << unique_beacons.size() << endl;
-    int64_t best = 0;
+    int best = 0;
     for (auto lhs : scanners)
         for (auto rhs : scanners)
             best = max(best, (lhs.position - rhs.position).manhattan());

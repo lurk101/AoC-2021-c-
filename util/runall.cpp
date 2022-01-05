@@ -19,6 +19,7 @@ struct day {
     string title;
     unsigned loc;
     double gcc_run;
+    double clang_run;
 };
 
 bool operator<(const day& a, const day& b) { return a.num < b.num; }
@@ -38,22 +39,23 @@ void linecount(day& d) {
     f.close();
 }
 
-void compile(day& d) {
-    cout << "Compiling " << d.name << endl;
+void compile(day& d, string comp) {
+    cout << "Compiling " << d.name << " with " << comp << "++" << endl;
     chdir(d.name.c_str());
-    string cmd = string("g++ -O3 -std=c++17 -mtune=native ") + d.name + ".cpp";
+    string cmd = comp + "++ -O3 -std=c++17 -mtune=native -o " + comp + ".out " + d.name + ".cpp";
     system(cmd.c_str());
     chdir("..");
 }
 
-void run(day& d) {
+void run(day& d, string comp) {
     cout << "Running " << d.name << endl;
     chdir(d.name.c_str());
     char buffer[128];
     FILE* pipe;
     double min_t = 1e99;
     for (int i = 0; i < 5; i++) {
-        pipe = popen("./a.out", "r");
+        string cmd = string("./") + comp + ".out";
+        pipe = popen(cmd.c_str(), "r");
         while (!feof(pipe))
             if (fgets(buffer, 128, pipe) != NULL) {
                 if (i == 0)
@@ -67,7 +69,10 @@ void run(day& d) {
             }
         pclose(pipe);
     }
-    d.gcc_run = min_t;
+    if (comp == "g")
+        d.gcc_run = min_t;
+    else
+        d.clang_run = min_t;
     chdir("..");
 }
 
@@ -117,21 +122,27 @@ int main(int ac, char* av[]) {
     cout << endl;
     for (auto& day : days) {
         linecount(day.second);
-        if (!nocomp)
-            compile(day.second);
+        if (!nocomp) {
+            compile(day.second, "g");
+            compile(day.second, "clang");
+        }
     }
-    for (auto& day : days)
-        run(day.second);
+    for (auto& day : days) {
+        run(day.second, "g");
+        run(day.second, "clang");
+    }
     if (!md)
-        cout << "Title                             LOC  run time" << endl
-             << "-------------------------------   ---  -----------" << endl;
+        cout << "Title                             LOC  g++ time     clang++ time" << endl
+             << "-------------------------------   ---  -----------  ------------" << endl;
     else
-        cout << "| Title | LOC | Run time |" << endl << "| --- | --- | --- |" << endl;
+        cout << "| Title | LOC | Run time |" << endl << "| --- | --- | --- | --- |" << endl;
     for (auto& d : days)
         if (md)
             cout << "| " << d.second.title << " | " << d.second.loc << " | "
-                 << time_to_string(d.second.gcc_run) << " |" << endl;
+                 << time_to_string(d.second.gcc_run) << " |" << time_to_string(d.second.clang_run)
+                 << " |" << endl;
         else
-            cout << left << setw(32) << d.second.title << right << setw(5) << d.second.loc
-                 << right << setw(13) << time_to_string(d.second.gcc_run) << endl;
+            cout << left << setw(32) << d.second.title << right << setw(5) << d.second.loc << right
+                 << setw(13) << time_to_string(d.second.gcc_run) << right << setw(14)
+                 << time_to_string(d.second.clang_run) << endl;
 }
