@@ -42,7 +42,8 @@ void linecount(day& d) {
 void compile(day& d, string comp) {
     cout << "Compiling " << d.name << " with " << comp << "++" << endl;
     chdir(d.name.c_str());
-    string cmd = comp + "++ -O3 -std=c++17 -mtune=native -o " + comp + ".out " + d.name + ".cpp";
+    string cmd = comp + "++ -O3 -std=c++17 -mtune=native -march=armv8-a+simd+crc -o " + comp +
+                 ".out " + d.name + ".cpp";
     system(cmd.c_str());
     chdir("..");
 }
@@ -135,11 +136,11 @@ int main(int ac, char* av[]) {
         cout << "Title                             LOC  g++ time     clang++ time" << endl
              << "-------------------------------   ---  -----------  ------------" << endl;
     else
-        cout << "| Title | LOC | Run time |" << endl << "| --- | --- | --- | --- |" << endl;
+        cout << "| Title | LOC | g++ time | clang++ time |" << endl << "| --- | --- | --- | --- |" << endl;
     for (auto& d : days)
         if (md)
             cout << "| " << d.second.title << " | " << d.second.loc << " | "
-                 << time_to_string(d.second.gcc_run) << " |" << time_to_string(d.second.clang_run)
+                 << time_to_string(d.second.gcc_run) << " | " << time_to_string(d.second.clang_run)
                  << " |" << endl;
         else
             cout << left << setw(32) << d.second.title << right << setw(5) << d.second.loc << right

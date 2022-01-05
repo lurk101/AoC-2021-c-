@@ -27,23 +27,22 @@ struct hash_point {
     int operator()(const point_s& p) const { return p.row * 100 + p.col; }
 };
 
+short dimension = 100;
+
+vector<point_s> neighbours(const point_s& p) {
+    return {point_s(p.row + 1, p.col), point_s(p.row - 1, p.col), point_s(p.row, p.col + 1),
+            point_s(p.row, p.col - 1)};
+}
+
+bool inside(const point_s& p) {
+    return p.row >= 0 && p.col >= 0 && p.row < dimension && p.col < dimension;
+}
+
 unsigned Dijkstra(unsigned part_n) {
-    priority_queue<pair<point_s, int>, vector<pair<point_s, int>>, compare_risk> prio_q;
+    priority_queue<pair<point_s, short>, vector<pair<point_s, int>>, compare_risk> prio_q;
     unordered_set<point_s, hash_point> visited;
-
-    const auto neighbours = [](const point_s& p) {
-        return vector<point_s>{point_s(p.row + 1, p.col), point_s(p.row - 1, p.col),
-                               point_s(p.row, p.col + 1), point_s(p.row, p.col - 1)};
-    };
-
-    short dimension = 100;
     if (part_n == 2)
         dimension *= 5;
-
-    const auto inside = [&dimension](const point_s& p) {
-        return p.row >= 0 && p.col >= 0 && p.row < dimension && p.col < dimension;
-    };
-
     const point_s start = point_s(0, 0);
     const point_s goal = point_s(dimension - 1, dimension - 1);
     prio_q.emplace(start, 0);
