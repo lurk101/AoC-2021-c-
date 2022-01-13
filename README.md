@@ -31,6 +31,36 @@ On Raspberry Pi4B
 | Day 24: Arithmetic Logic Unit  | 70 | 89 us. | 85 us. |
 | Day 25: Sea Cucumber  | 76 | 80.507 ms. | 75.236 ms. |
 
+On Jetson Nano
+
+| Title | LOC | g++ time | clang++ time |
+| --- | --- | --- | --- |
+| Day 1: Sonar Sweep  | 52 | 479 us. | 531 us. |
+| Day 2: Dive!  | 68 | 321 us. | 410 us. |
+| Day 3: Binary Diagnostic  | 61 | 813 us. | 1.181 ms. |
+| Day 4: Giant Squid  | 117 | 1.334 ms. | 1.275 ms. |
+| Day 5: Hydrothermal Venture  | 89 | 9.494 ms. | 11.864 ms. |
+| Day 6: Lanternfish  | 40 | 105 us. | 106 us. |
+| Day 7: The Treachery of Whales  | 58 | 15.176 ms. | 14.861 ms. |
+| Day 8: Seven Segment Search  | 138 | 866 us. | 865 us. |
+| Day 9: Smoke Basin  | 113 | 4.898 ms. | 4.427 ms. |
+| Day 10: Syntax Scoring  | 110 | 1.377 ms. | 2.255 ms. |
+| Day 11: Dumbo Octopus  | 86 | 1.534 ms. | 2.136 ms. |
+| Day 12: Passage Pathing  | 92 | 302.541 ms. | 325.361 ms. |
+| Day 13: Transparent Origami  | 105 | 3.319 ms. | 3.66 ms. |
+| Day 14: Extended Polymerization  | 76 | 3.523 ms. | 4.03 ms. |
+| Day 15: Chiton  | 84 | 287.739 ms. | 286.32 ms. |
+| Day 16: Packet Decoder  | 145 | 226 us. | 267 us. |
+| Day 17: Trick Shot  | 81 | 12.016 ms. | 10.563 ms. |
+| Day 18: Snailfish  | 165 | 133.351 ms. | 148.205 ms. |
+| Day 19: Beacon Scanner  | 182 | 74.047 ms. | 80.57 ms. |
+| Day 20: Trench Map  | 72 | 72.861 ms. | 67.576 ms. |
+| Day 21: Dirac Dice  | 114 | 908.354 ms. | 681.93 ms. |
+| Day 22: Reactor Reboot  | 230 | 124.876 ms. | 122.735 ms. |
+| Day 23: Amphipod  | 204 | 2.67423 s.  | 2.59978 s.  |
+| Day 24: Arithmetic Logic Unit  | 70 | 79 us. | 84 us. |
+| Day 25: Sea Cucumber  | 76 | 104.499 ms. | 96.642 ms. |
+
 On Ryzen 7 3700X
 
 | Title | LOC | g++ time | clang++ time |
