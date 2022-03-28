@@ -42,7 +42,7 @@ void linecount(day& d) {
 void compile(day& d, string comp) {
     cout << "Compiling " << d.name << " with " << comp << "++" << endl;
     chdir(d.name.c_str());
-    string cmd = comp + "++ -O3 -std=c++17 -mtune=native -march=armv8-a+simd+crc -o " + comp +
+    string cmd = comp + "++ -O3 -mtune=native -march=native -o " + comp +
                  ".out " + d.name + ".cpp";
     system(cmd.c_str());
     chdir("..");
