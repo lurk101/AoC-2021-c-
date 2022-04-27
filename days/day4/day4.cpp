@@ -8,7 +8,7 @@
 using namespace std;
 using namespace chrono;
 
-vector<unsigned> numbers;
+vector<unsigned> numbrs;
 typedef struct {
     int8_t square[25];
     bool bingo;
@@ -46,7 +46,7 @@ bool bingo(board& b, uint8_t sq) {
 }
 
 int part1(void) {
-    for (auto n : numbers)
+    for (auto n : numbrs)
         for (auto& b : boards)
             if (bingo(b, n)) {
                 unsigned sum = 0;
@@ -62,7 +62,7 @@ int part2(void) {
     boards = move(save_boards);
     board last_board;
     unsigned last_n;
-    for (auto n : numbers)
+    for (auto n : numbrs)
         for (auto& b : boards)
             if (!b.bingo && bingo(b, n)) {
                 b.bingo = true;
@@ -84,13 +84,13 @@ int main() {
     auto start = high_resolution_clock::now();
     char c;
     unsigned n;
-    numbers.clear();
+    numbrs.clear();
     stringstream ss;
     for (int i = 0; i < sizeof(lines) / sizeof(lines[0]); i++)
         ss << lines[i] << ' ';
     for (;;) {
         ss >> n;
-        numbers.push_back(n);
+        numbrs.push_back(n);
         if (ss.peek() != ',')
             break;
         ss >> c;
