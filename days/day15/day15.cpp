@@ -39,7 +39,7 @@ bool inside(const point_s& p) {
 }
 
 unsigned Dijkstra(unsigned part_n) {
-    priority_queue<pair<point_s, short>, vector<pair<point_s, int>>, compare_risk> prio_q;
+    priority_queue<pair<point_s, int>, vector<pair<point_s, int>>, compare_risk> prio_q;
     unordered_set<point_s, hash_point> visited;
     if (part_n == 2)
         dimension *= 5;
