@@ -1,14 +1,13 @@
 #define title "--- Day 19: Beacon Scanner ---"
 #include <algorithm>
 #include <chrono>
-#include <cstring>
 #include <deque>
-#include <functional>
+#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
 using namespace std;
 using namespace chrono;
 
@@ -26,10 +25,11 @@ const rotation_t rotations[24] = {
     {{2, 1}, {0, -1}, {1, -1}},  {{2, 1}, {1, -1}, {0, 1}},  {{2, -1}, {0, 1}, {1, -1}},
     {{2, -1}, {1, -1}, {0, -1}}, {{2, -1}, {0, -1}, {1, 1}}, {{2, -1}, {1, 1}, {0, 1}}};
 
-struct beacon_s {
+struct beacon_t {
     int x, y, z;
     int manhattan() { return abs(x) + abs(y) + abs(z); }
-    beacon_s rotate(const rotation_t& rot) const {
+
+    beacon_t rotate(const rotation_t& rot) const {
         const int vals[3] = {x, y, z};
         return {(vals[rot[0].dimension]) * rot[0].polarity,
                 (vals[rot[1].dimension]) * rot[1].polarity,
@@ -37,31 +37,32 @@ struct beacon_s {
     }
 };
 
-beacon_s operator-(const beacon_s& a, const beacon_s& b) {
+beacon_t operator-(const beacon_t& a, const beacon_t& b) {
     return {a.x - b.x, a.y - b.y, a.z - b.z};
 }
 
-beacon_s operator+(const beacon_s& a, const beacon_s& b) {
+beacon_t operator+(const beacon_t& a, const beacon_t& b) {
     return {a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
-bool operator==(const beacon_s& a, const beacon_s& b) {
+bool operator==(const beacon_t& a, const beacon_t& b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
 struct sig_hash {
-    size_t operator()(beacon_s const& s) const { return s.x ^ s.y ^ s.z; }
+    size_t operator()(beacon_t const& s) const { return s.x ^ s.y ^ s.z; }
 };
 
 struct scanner_orientation {
     rotation_t rotation;
-    beacon_s position;
+    beacon_t position;
 };
 
-struct scanner_s {
-    vector<beacon_s> beacons;
+struct scanner_t {
+    vector<beacon_t> beacons;
     vector<int16_t> sig;
-    beacon_s position;
+    beacon_t position;
+
     void generate_sig(void) {
         sig.reserve(beacons.size() * (beacons.size() - 1) / 2);
         for (auto it1 = beacons.begin(); it1 != beacons.end() - 1; it1++)
@@ -73,7 +74,8 @@ struct scanner_s {
             }
         sort(sig.begin(), sig.end());
     }
-    bool check_sig(const scanner_s& other) const {
+
+    bool check_sig(const scanner_t& other) const {
         unsigned match = 0;
         for (auto it = sig.begin(), ito = other.sig.begin();
              it != sig.end() && ito != other.sig.end();) {
@@ -95,11 +97,12 @@ struct scanner_s {
             beacon = beacon.rotate(orientation.rotation) + orientation.position;
         position = orientation.position;
     }
-    bool overlaps(const scanner_s& other, unsigned threshold, scanner_orientation& o) const {
+
+    bool overlaps(const scanner_t& other, unsigned threshold, scanner_orientation& o) const {
         if (!check_sig(other))
             return false;
         for (auto& rotation : rotations) {
-            unordered_map<beacon_s, unsigned, sig_hash> cnts;
+            unordered_map<beacon_t, unsigned, sig_hash> cnts;
             for (auto& a : beacons)
                 for (auto& b : other.beacons)
                     cnts[a - b.rotate(rotation)]++;
@@ -116,14 +119,14 @@ struct scanner_s {
     }
 };
 
-vector<scanner_s> scanners;
+vector<scanner_t> scanners;
 
 void normalize(void) {
     unordered_set<int> fixed;
     deque<int> queue;
     fixed.insert(0);
     queue.push_back(0);
-    scanners[0].position = beacon_s{0, 0, 0};
+    scanners[0].position = beacon_t{0, 0, 0};
     while (!queue.empty()) {
         auto tested = queue.front();
         queue.pop_front();
@@ -140,33 +143,30 @@ void normalize(void) {
     }
 }
 
-const char* lines[] = {
-#include "day19.txt"
-};
-
 int main() {
     auto start = high_resolution_clock::now();
     cout << title << endl;
+    fstream f("day19.txt", ios::in);
     string line;
-    scanner_s scan;
+    scanner_t scan;
     scan.beacons.clear();
-    for (auto& line : lines) {
-        if (strlen(line) == 0) {
+    while (getline(f, line)) {
+        if (line.length() == 0) {
             scanners.push_back(scan);
             scan.beacons.clear();
             continue;
         }
         if (line[1] == '-')
             continue;
-        beacon_s b;
-        sscanf(line, "%d,%d,%d", &b.x, &b.y, &b.z);
+        beacon_t b;
+        sscanf(line.c_str(), "%d,%d,%d", &b.x, &b.y, &b.z);
         scan.beacons.push_back(b);
     }
     scanners.push_back(scan);
     for (auto& scanner : scanners)
         scanner.generate_sig();
     normalize();
-    unordered_set<beacon_s, sig_hash> unique_beacons;
+    unordered_set<beacon_t, sig_hash> unique_beacons;
     for (const auto& s : scanners)
         for (const auto& b : s.beacons)
             unique_beacons.insert(b);
