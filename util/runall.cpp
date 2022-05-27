@@ -22,11 +22,14 @@ struct day {
     double clang_run;
 };
 
-bool operator<(const day& a, const day& b) { return a.num < b.num; }
+static double gcc_tot = 0, clang_tot = 0;
+static unsigned loc_tot = 0;
 
-map<unsigned, day> days;
+static bool operator<(const day& a, const day& b) { return a.num < b.num; }
 
-void linecount(day& d) {
+static map<unsigned, day> days;
+
+static void linecount(day& d) {
     string f_name = d.name + '/' + d.name + ".cpp";
     ifstream f(f_name);
     string l;
@@ -35,11 +38,12 @@ void linecount(day& d) {
     unsigned loc = 1;
     while (getline(f, l))
         loc++;
-    d.loc = loc;
     f.close();
+    d.loc = loc;
+    loc_tot += loc;
 }
 
-void compile(day& d, string comp) {
+static void compile(day& d, string comp) {
     cout << "Compiling " << d.name << " with " << comp << "++" << endl;
     chdir(d.name.c_str());
     string cmd = comp + "++ -std=gnu++20 -O3 -mtune=native -o " + comp + ".out " + d.name + ".cpp";
@@ -47,7 +51,7 @@ void compile(day& d, string comp) {
     chdir("..");
 }
 
-void run(day& d, string comp) {
+static void run(day& d, string comp) {
     cout << "Running " << d.name << endl;
     chdir(d.name.c_str());
     char buffer[128];
@@ -69,14 +73,17 @@ void run(day& d, string comp) {
             }
         pclose(pipe);
     }
-    if (comp == "g")
+    if (comp == "g") {
         d.gcc_run = min_t;
-    else
+        gcc_tot += min_t;
+    } else {
         d.clang_run = min_t;
+        clang_tot += min_t;
+    }
     chdir("..");
 }
 
-string time_to_string(double t) {
+static string time_to_string(double t) {
     stringstream ss;
     string s;
     double d;
@@ -145,4 +152,7 @@ int main(int ac, char* av[]) {
             cout << left << setw(32) << d.second.title << right << setw(5) << d.second.loc << right
                  << setw(13) << time_to_string(d.second.gcc_run) << right << setw(14)
                  << time_to_string(d.second.clang_run) << endl;
+    if (!md)
+        cout << left << setw(32) << "TOTAL" << right << setw(5) << loc_tot << right << setw(13)
+             << time_to_string(gcc_tot) << right << setw(14) << time_to_string(clang_tot) << endl;
 }
