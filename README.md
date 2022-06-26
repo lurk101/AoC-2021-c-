@@ -156,3 +156,35 @@ Options: -std=gnu++20 -O3 -mtune=native
 | Day 24: Arithmetic Logic Unit  | 70 | 15 us. | 17 us. |
 | Day 25: Sea Cucumber  | 76 | 33.395 ms. | 32.831 ms. |
 
+On VisionFive RISC-V SiFive U74 Dual-Core 64-bit RV64GC
+
+Options: -std=gnu++20 -O3
+
+| Title | LOC | g++ time | clang++ time |
+| --- | --- | --- | --- |
+| Day 1: Sonar Sweep  | 52 | 1.475 ms. | 1.469 ms. |
+| Day 2: Dive!  | 68 | 863 us. | 922 us. |
+| Day 3: Binary Diagnostic  | 61 | 3.18 ms. | 3.053 ms. |
+| Day 4: Giant Squid  | 117 | 2.922 ms. | 3.647 ms. |
+| Day 5: Hydrothermal Venture  | 89 | 90.061 ms. | 88.483 ms. |
+| Day 6: Lanternfish  | 40 | 398 us. | 349 us. |
+| Day 7: The Treachery of Whales  | 58 | 35.168 ms. | 40.943 ms. |
+| Day 8: Seven Segment Search  | 138 | 1.981 ms. | 1.845 ms. |
+| Day 9: Smoke Basin  | 113 | 9.196 ms. | 9.335 ms. |
+| Day 10: Syntax Scoring  | 110 | 4.412 ms. | 4.611 ms. |
+| Day 11: Dumbo Octopus  | 86 | 2.586 ms. | 4.282 ms. |
+| Day 12: Passage Pathing  | 92 | 636.692 ms. | 699.845 ms. |
+| Day 13: Transparent Origami  | 105 | 9.951 ms. | 10.429 ms. |
+| Day 14: Extended Polymerization  | 76 | 10.936 ms. | 10.429 ms. |
+| Day 15: Chiton  | 84 | 1.08252 s.  | 1.10207 s.  |
+| Day 16: Packet Decoder  | 145 | 749 us. | 821 us. |
+| Day 17: Trick Shot  | 81 | 33.572 ms. | 45.709 ms. |
+| Day 18: Snailfish  | 165 | 370.425 ms. | 418.688 ms. |
+| Day 19: Beacon Scanner  | 182 | 259.318 ms. | 260.592 ms. |
+| Day 20: Trench Map  | 72 | 156.586 ms. | 268.564 ms. |
+| Day 21: Dirac Dice  | 114 | 3.84297 s.  | 1.81271 s.  |
+| Day 22: Reactor Reboot  | 230 | 240.313 ms. | 942.321 ms. |
+| Day 23: Amphipod  | 204 | 6.91559 s.  | 7.38928 s.  |
+| Day 24: Arithmetic Logic Unit  | 70 | 310 us. | 218 us. |
+| Day 25: Sea Cucumber  | 76 | 218.075 ms. | 148.033 ms. |
+
