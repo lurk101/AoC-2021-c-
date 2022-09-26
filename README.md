@@ -188,3 +188,33 @@ Options: -std=gnu++20 -O3
 | Day 24: Arithmetic Logic Unit  | 70 | 310 us. | 218 us. |
 | Day 25: Sea Cucumber  | 76 | 218.075 ms. | 148.033 ms. |
 
+On ROCKPi4Se
+
+| Title | LOC | g++ time | clang++ time |
+| --- | --- | --- | --- |
+| Day 1: Sonar Sweep  | 52 | 704 us. | 721 us. |
+| Day 2: Dive!  | 68 | 452 us. | 422 us. |
+| Day 3: Binary Diagnostic  | 61 | 1.697 ms. | 1.673 ms. |
+| Day 4: Giant Squid  | 117 | 2.112 ms. | 2.198 ms. |
+| Day 5: Hydrothermal Venture  | 89 | 23.769 ms. | 25.493 ms. |
+| Day 6: Lanternfish  | 40 | 193 us. | 210 us. |
+| Day 7: The Treachery of Whales  | 58 | 20.8 ms. | 21.464 ms. |
+| Day 8: Seven Segment Search  | 138 | 1.027 ms. | 954 us. |
+| Day 9: Smoke Basin  | 113 | 5.98 ms. | 5.74 ms. |
+| Day 10: Syntax Scoring  | 110 | 2.341 ms. | 2.212 ms. |
+| Day 11: Dumbo Octopus  | 86 | 1.949 ms. | 2.967 ms. |
+| Day 12: Passage Pathing  | 92 | 195.969 ms. | 195.772 ms. |
+| Day 13: Transparent Origami  | 105 | 4.856 ms. | 4.821 ms. |
+| Day 14: Extended Polymerization  | 76 | 4.543 ms. | 4.41 ms. |
+| Day 15: Chiton  | 84 | 311.409 ms. | 321.443 ms. |
+| Day 16: Packet Decoder  | 145 | 422 us. | 428 us. |
+| Day 17: Trick Shot  | 81 | 13.866 ms. | 15.8 ms. |
+| Day 18: Snailfish  | 165 | 103.355 ms. | 113.685 ms. |
+| Day 19: Beacon Scanner  | 182 | 70.802 ms. | 69.834 ms. |
+| Day 20: Trench Map  | 72 | 67.444 ms. | 69.855 ms. |
+| Day 21: Dirac Dice  | 114 | 554.58 ms. | 530.56 ms. |
+| Day 22: Reactor Reboot  | 230 | 106.752 ms. | 109.901 ms. |
+| Day 23: Amphipod  | 204 | 2.21351 s.  | 1.90361 s.  |
+| Day 24: Arithmetic Logic Unit  | 70 | 137 us. | 142 us. |
+| Day 25: Sea Cucumber  | 76 | 81.055 ms. | 77.457 ms. |
+
